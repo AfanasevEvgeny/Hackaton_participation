@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>eye track</title>
+
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.8.1/localforage.js"></script>
+    <script src="https://webgazer.cs.brown.edu/webgazer.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.rawgit.com/abdmob/x2js/master/xml2json.js"></script>
+
+    <script src="./ambient.js"></script>
+    <script src="./trans.js"></script>
+
+    <audio id="tune"></audio>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br>
+    <div id="w1" style=" font-size: 3vw; line-height: 10vw">
+        Предложение про дождь ага это тут капли и все такое <br>
+    </div>
+    <div id="w2" style=" font-size: 3vw; line-height: 10vw">
+        Предложение про лес звуки из леса допустим ага да что-то лесное <br>
+    </div>
+    <div id="w3" style=" font-size: 3vw; line-height: 10vw">
+        Предложение про лес ночь звуки из леса ночью допустим ага ночь да что-то лесное и ночное <br>
+    </div>
+    <div id="xml_resp">Пустой див</div>
+
+    <script>
+        webgazer.setRegression('ridge').setGazeListener(function (data, elapsedTime)
+        {
+            // console.log('data', data);
+            if (data == null)
+            {
+                return;
+            }
+
+            var xprediction = data.x; // these x coordinates are relative to the viewport
+            var yprediction = data.y; // these y coordinates are relative to the viewport
+            // console.log(xprediction, yprediction, elapsedTime); // elapsed time is based on time since begin was called
+
+            if (document.elementFromPoint(xprediction, yprediction) &&
+                document.elementFromPoint(xprediction, yprediction).attributes)
+            {
+                let sent_id = document.elementFromPoint(xprediction, yprediction).attributes[0].value;
+                if (document.getElementById(sent_id))
+                {
+                    let sent = document.getElementById(sent_id).innerHTML;
+                    console.log(sent);
+                    predict_ambient(sent);
+                }
+            }
+        }).begin();
+        webgazer.showPredictionPoints(true);
+        webgazer.params.showVideoPreview = true;
+    </script>
+
+</head>
+
+</html>
